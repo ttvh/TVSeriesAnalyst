@@ -59,14 +59,14 @@ class ThemeClassifier():
         return themes
 
     def get_themes(self,dtaset_path, save_path=None):
-        # Read Save Output if Exists
+
         if save_path is not None and os.path.exists(save_path):
             df = pd.read_csv(save_path)
             return df
 
         # load Dataset
         df = load_subtitles_dataset(dtaset_path)
-        df = df.head
+        df = df.head()
 
         # Run Inference
         output_themes = df['script'].apply(self.get_themes_inference)

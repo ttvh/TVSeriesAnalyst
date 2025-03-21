@@ -8,6 +8,7 @@ def get_themes(theme_list_str,subtitles_path,save_path):
     theme_list = theme_list_str.split(',')
     theme_classifier = ThemeClassifier(theme_list)
     output_df = theme_classifier.get_themes(subtitles_path,save_path)
+    print(output_df.columns)
 
     # Remove dialogue from the theme list
     theme_list = [theme for theme in theme_list if theme != 'dialogue']
