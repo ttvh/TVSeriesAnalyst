@@ -1,16 +1,16 @@
 import gradio as gr
 from theme_classifier import ThemeClassifier
+from character_network import NamedEntityRecognizer, CharacterNetworkGenerator
+from text_classification import JutsuClassifier
+from character_chatbot import CharacterChatBot
 import os
 from dotenv import load_dotenv
 load_dotenv()
-from character_network import NamedEntityRecognizer, CharacterNetworkGenerator
-from text_classification import JutsuClassifier
 
 def get_themes(theme_list_str,subtitles_path,save_path):
     theme_list = theme_list_str.split(',')
     theme_classifier = ThemeClassifier(theme_list)
     output_df = theme_classifier.get_themes(subtitles_path,save_path)
-    print(output_df.columns)
 
     # Remove dialogue from the theme list
     theme_list = [theme for theme in theme_list if theme != 'dialogue']
@@ -52,7 +52,17 @@ def classify_text(text_classifcation_model,text_classifcation_data_path,text_to_
     
     return output
 
-def main() :
+def chat_with_character_chatbot(message, history):
+    character_chatbot = CharacterChatBot("AbdullahTarek/Naruto_Llama-3-8B",
+                                         huggingface_token = os.getenv('huggingface_token')
+                                         )
+
+    output = character_chatbot.chat(message, history)
+    output = output['content'].strip()
+    return output
+
+
+def main():
     with gr.Blocks() as iface:
         # Theme Classification Section
         with gr.Row():
@@ -68,7 +78,7 @@ def main() :
                         get_themes_button =gr.Button("Get Themes")
                         get_themes_button.click(get_themes, inputs=[theme_list,subtitles_path,save_path], outputs=[plot])
 
-        # character network section
+        # Character Network Section
         with gr.Row():
             with gr.Column():
                 gr.HTML("<h1>Character Network (NERs and Graphs)</h1>")
@@ -81,7 +91,7 @@ def main() :
                         get_network_graph_button = gr.Button("Get Character Network")
                         get_network_graph_button.click(get_character_network, inputs=[subtitles_path,ner_path], outputs=[network_html])
 
-        # Text Classification Section
+        # Text Classification with LLMs
         with gr.Row():
             with gr.Column():
                 gr.HTML("<h1>Text Classification with LLMs</h1>")
@@ -95,7 +105,14 @@ def main() :
                         classify_text_button = gr.Button("Clasify Text (Jutsu)")
                         classify_text_button.click(classify_text, inputs=[text_classifcation_model,text_classifcation_data_path,text_to_classify], outputs=[text_classification_output])
 
-    iface.launch(share=True)
+        # Character Chatbot Section
+        with gr.Row():
+            with gr.Column():
+                gr.HTML("<h1>Character Chatbot</h1>")
+                gr.ChatInterface(chat_with_character_chatbot)
 
-if __name__ == "__main__" :
+    iface.launch(share=True)
+            
+
+if __name__ == '__main__':
     main()
