@@ -43,7 +43,7 @@ class JutsuClassifier():
 
         self.tokenizer = self.load_tokenizer()
 
-        if not huggingface_hub.repo_exists(self.model_path):
+        if not self.model_path or not huggingface_hub.repo_exists(self.model_path):
 
             # check if the data path is provided
             if data_path is None:
@@ -63,8 +63,10 @@ class JutsuClassifier():
         self.model = self.load_model(self.model_path)
 
     def load_model(self, model_path):
+        if not model_path:
+            model_path = self.model_name  # Dùng mô hình mặc định
         model = pipeline('text-classification',
-                         model=model_path, return_all_scores=True)
+                        model=model_path, return_all_scores=True)
         return model
 
     def train_model(self, train_data, test_data, class_weights):
@@ -160,11 +162,12 @@ class JutsuClassifier():
         return tokenized_train, tokenized_test
 
     def load_tokenizer(self):
-        if huggingface_hub.repo_exists(self.model_path):
+        if self.model_path and huggingface_hub.repo_exists(self.model_path):
             tokenizer = AutoTokenizer.from_pretrained(self.model_path)
         else:
             tokenizer = AutoTokenizer.from_pretrained(self.model_name)
         return tokenizer
+
 
     def postprocess(self, model_output):
         output = []
