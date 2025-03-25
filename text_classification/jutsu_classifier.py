@@ -71,7 +71,7 @@ class JutsuClassifier():
 
     def train_model(self, train_data, test_data, class_weights):
         if not self.model_path:
-            self.model_path = "../trained_model"  # Thư mục mặc định nếu model_path rỗng
+            self.model_path = "./trained_model"  # Thư mục mặc định nếu model_path rỗng
 
         os.makedirs(self.model_path, exist_ok=True)  # Đảm bảo thư mục tồn tại
         model = AutoModelForSequenceClassification.from_pretrained(self.model_name,
