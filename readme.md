@@ -25,7 +25,7 @@ The project combines several advanced NLP pipelines into a single, interactive *
 
 This project is composed of four primary AI systems.
 
-### a. Pipeline 1: Zero-Shot Theme Analysis (2:07:20)
+### a. Pipeline 1: Zero-Shot Theme Analysis 
 This pipeline analyzes the script/subtitles of the entire series to find out which themes are most prominent.
 
 1.  **Model:** Uses a pre-trained **Zero-Shot Classifier** (`facebook/bart-large-mnli`) from Hugging Face.
@@ -33,7 +33,7 @@ This pipeline analyzes the script/subtitles of the entire series to find out whi
 3.  **Inference:** The model is run in batches over the subtitle data. It classifies text segments against a flexible list of themes (e.g., "betrayal," "loneliness," "teamwork") without needing to be pre-trained on them.
 4.  **Visualization:** The results are aggregated using `Pandas` to calculate mean scores for each theme, which are then plotted in a `Gradio` bar chart.
 
-### b. Pipeline 2: Character Network (NER) (2:38:52)
+### b. Pipeline 2: Character Network (NER) 
 This system identifies which characters interact in the show and builds a relationship graph.
 
 1.  **Model:** Uses a **Named Entity Recognition (NER)** model from `Spacy` (or Hugging Face) to identify character names within the text.
@@ -42,7 +42,7 @@ This system identifies which characters interact in the show and builds a relati
 4.  **Standardization:** The relationship pairs are sorted alphabetically (e.g., "Naruto|Sasuke") to ensure "Naruto-Sasuke" and "Sasuke-Naruto" are counted as the same relationship.
 5.  **Visualization:** The aggregated relationships are used to generate a character network graph, showing who interacts with whom most frequently.
 
-### c. Pipeline 3: Custom Jutsu Classifier (3:30:43)
+### c. Pipeline 3: Custom Jutsu Classifier 
 This pipeline involves training a **custom text classification model** to categorize any Jutsu description into its correct type.
 
 1.  **Data:** Uses the data scraped by `Scrapy` (Jutsu name, description, and type).
@@ -52,7 +52,7 @@ This pipeline involves training a **custom text classification model** to catego
 5.  **Training:** A custom `Trainer` from Hugging Face is used to train a `SequenceClassification` model. Class weights are passed to the custom trainer to ensure the model trains effectively on the imbalanced data.
 6.  **Inference:** The final, trained model is saved and used in a function that can take new text and predict its class.
 
-### d. Pipeline 4: Character Chatbot (4:48:50)
+### d. Pipeline 4: Character Chatbot 
 This is a fine-tuning pipeline that creates a generative AI chatbot capable of role-playing as a specific character.
 
 1.  **Model:** Uses a state-of-the-art, instruction-tuned model (like Llama, Mistral, or Gemma) via the `transformers` library.
